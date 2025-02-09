@@ -1,11 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
+import { ConfigService } from '@nestjs/config';
 import { AxiosResponse } from 'axios';
 import { Observable } from 'rxjs';
 
 @Injectable()
 export class AppService {
-  constructor(private readonly httpService: HttpService) {}
+  constructor(
+    private readonly httpService: HttpService,
+    private readonly configService: ConfigService,
+  ) {}
 
   proxyRequest(
     method: string,
@@ -13,7 +17,9 @@ export class AppService {
     body?: any,
     headers?: any,
   ): Observable<AxiosResponse> {
-    const targetUrl = "http://localhost:3000"+url;
+    const targetUrl = `${this.configService.get<string>(
+      'TARGET_SERVICE_URL',
+    )}${url}`;
     switch (method.toLowerCase()) {
       case 'get':
         return this.httpService.get(targetUrl, { headers });

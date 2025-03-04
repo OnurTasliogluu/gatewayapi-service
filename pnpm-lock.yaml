@@ -16,10 +16,19 @@ importers:
         version: 4.0.0(@nestjs/common@11.0.8(reflect-metadata@0.2.2)(rxjs@7.8.1))(rxjs@7.8.1)
       '@nestjs/core':
         specifier: ^11.0.1
-        version: 11.0.8(@nestjs/common@11.0.8(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@11.0.8)(reflect-metadata@0.2.2)(rxjs@7.8.1)
+        version: 11.0.8(@nestjs/common@11.0.8(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/microservices@11.0.11)(@nestjs/platform-express@11.0.8)(reflect-metadata@0.2.2)(rxjs@7.8.1)
+      '@nestjs/microservices':
+        specifier: ^11.0.9
+        version: 11.0.11(@nestjs/common@11.0.8(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@11.0.8)(kafkajs@2.2.4)(reflect-metadata@0.2.2)(rxjs@7.8.1)
       '@nestjs/platform-express':
         specifier: ^11.0.1
         version: 11.0.8(@nestjs/common@11.0.8(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@11.0.8)
+      '@openfga/sdk':
+        specifier: ^0.8.0
+        version: 0.8.0
+      kafkajs:
+        specifier: 2.2.4
+        version: 2.2.4
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
@@ -44,7 +53,7 @@ importers:
         version: 11.0.0(chokidar@4.0.3)(typescript@5.7.3)
       '@nestjs/testing':
         specifier: ^11.0.1
-        version: 11.0.8(@nestjs/common@11.0.8(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@11.0.8)(@nestjs/platform-express@11.0.8)
+        version: 11.0.8(@nestjs/common@11.0.8(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@11.0.8)(@nestjs/microservices@11.0.11)(@nestjs/platform-express@11.0.8)
       '@swc/cli':
         specifier: ^0.6.0
         version: 0.6.0(@swc/core@1.10.15)(chokidar@4.0.3)
@@ -760,6 +769,42 @@ packages:
       '@nestjs/websockets':
         optional: true
 
+  '@nestjs/microservices@11.0.11':
+    resolution: {integrity: sha512-vH7QY8kqvhbAIFY4+MpvzIiEk24boWGwdkhx1tvtXmKV3711fbswUqa3KMKu8u3aQ4BcQCjx4e/6l994Luru2A==}
+    peerDependencies:
+      '@grpc/grpc-js': '*'
+      '@nestjs/common': ^11.0.0
+      '@nestjs/core': ^11.0.0
+      '@nestjs/websockets': ^11.0.0
+      amqp-connection-manager: '*'
+      amqplib: '*'
+      cache-manager: '*'
+      ioredis: '*'
+      kafkajs: '*'
+      mqtt: '*'
+      nats: '*'
+      reflect-metadata: ^0.1.12 || ^0.2.0
+      rxjs: ^7.1.0
+    peerDependenciesMeta:
+      '@grpc/grpc-js':
+        optional: true
+      '@nestjs/websockets':
+        optional: true
+      amqp-connection-manager:
+        optional: true
+      amqplib:
+        optional: true
+      cache-manager:
+        optional: true
+      ioredis:
+        optional: true
+      kafkajs:
+        optional: true
+      mqtt:
+        optional: true
+      nats:
+        optional: true
+
   '@nestjs/platform-express@11.0.8':
     resolution: {integrity: sha512-Ru7seOYYglKNGQFzNALE5ilLqkdtX/ge6AJDKLMt+WI7iElZ7lXjT40fE3+HVUiZODunmeKQ7jVxcQyZwLafVA==}
     peerDependencies:
@@ -800,6 +845,14 @@ packages:
     resolution: {integrity: sha512-GXD3wy50qYbxCJ652bDrDzgMr3NFEkIS374+IgFQKkCvk9yiYcLvX2XDYr7UyQxf4wK0e+yqDYRubZ0DtOxnmQ==}
     engines: {node: ^14.18.0 || >=16.10.0, npm: '>=5.10.0'}
     hasBin: true
+
+  '@openfga/sdk@0.8.0':
+    resolution: {integrity: sha512-tFd5oQ6a3ps8Qbj9V8VhETyKnl7QtQa0o9G9464yI6KAih0FhMg/5e1/T701j6hkeGqGGJCmv1csD/OXyGCpFQ==}
+    engines: {node: '>=16.15.0'}
+
+  '@opentelemetry/api@1.9.0':
+    resolution: {integrity: sha512-3giAOQvZiH5F9bMlMiv8+GSPMeqg0dbaeo58/0SlA9sxSqZhnUtxzX9/2FzyhS9sWQf5S0GJE0AKBrFqjpeYcg==}
+    engines: {node: '>=8.0.0'}
 
   '@pkgr/core@0.1.1':
     resolution: {integrity: sha512-cq8o4cWH0ibXh9VGi5P20Tu9XF/0fFXl9EUinr9QfTM7a7p0oTA4iJRCQWppXR1Pg8dSM0UCItCkPwsk9qWWYA==}
@@ -2418,6 +2471,10 @@ packages:
   jsonfile@6.1.0:
     resolution: {integrity: sha512-5dgndWOriYSm5cnYaJNhalLNDKOqFwyDB/rr1E9ZsGciGvKPs8R2xYGCacuf3z6K1YKDz182fd+fY3cn3pMqXQ==}
 
+  kafkajs@2.2.4:
+    resolution: {integrity: sha512-j/YeapB1vfPT2iOIUn/vxdyKEuhuY2PxMBvf5JWux6iSaukAccrMtXEY/Lb7OvavDhOWME589bpLrEdnVHjfjA==}
+    engines: {node: '>=14.0.0'}
+
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
 
@@ -3154,6 +3211,9 @@ packages:
 
   through@2.3.8:
     resolution: {integrity: sha512-w89qg7PI8wAdvX60bMDP+bFoD5Dvhm9oLheFp5O4a2QF0cSBGsBX4qZmadPMvVqlLJBBci+WqGGOAPvcDeNSVg==}
+
+  tiny-async-pool@2.1.0:
+    resolution: {integrity: sha512-ltAHPh/9k0STRQqaoUX52NH4ZQYAJz24ZAEwf1Zm+HYg3l9OXTWeqWKyYsHu40wF/F0rxd2N2bk5sLvX2qlSvg==}
 
   tmp@0.0.33:
     resolution: {integrity: sha512-jRCJlojKnZ3addtTOjdIqoRuPEKBvNXcGYqzO6zWZX8KfKEpnGY5jfggJQ3EjKuu8D4bJRr0y+cYJFmYbImXGw==}
@@ -4189,7 +4249,7 @@ snapshots:
       lodash: 4.17.21
       rxjs: 7.8.1
 
-  '@nestjs/core@11.0.8(@nestjs/common@11.0.8(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@11.0.8)(reflect-metadata@0.2.2)(rxjs@7.8.1)':
+  '@nestjs/core@11.0.8(@nestjs/common@11.0.8(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/microservices@11.0.11)(@nestjs/platform-express@11.0.8)(reflect-metadata@0.2.2)(rxjs@7.8.1)':
     dependencies:
       '@nestjs/common': 11.0.8(reflect-metadata@0.2.2)(rxjs@7.8.1)
       '@nuxt/opencollective': 0.4.1
@@ -4201,12 +4261,24 @@ snapshots:
       tslib: 2.8.1
       uid: 2.0.2
     optionalDependencies:
+      '@nestjs/microservices': 11.0.11(@nestjs/common@11.0.8(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@11.0.8)(kafkajs@2.2.4)(reflect-metadata@0.2.2)(rxjs@7.8.1)
       '@nestjs/platform-express': 11.0.8(@nestjs/common@11.0.8(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@11.0.8)
+
+  '@nestjs/microservices@11.0.11(@nestjs/common@11.0.8(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@11.0.8)(kafkajs@2.2.4)(reflect-metadata@0.2.2)(rxjs@7.8.1)':
+    dependencies:
+      '@nestjs/common': 11.0.8(reflect-metadata@0.2.2)(rxjs@7.8.1)
+      '@nestjs/core': 11.0.8(@nestjs/common@11.0.8(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/microservices@11.0.11)(@nestjs/platform-express@11.0.8)(reflect-metadata@0.2.2)(rxjs@7.8.1)
+      iterare: 1.2.1
+      reflect-metadata: 0.2.2
+      rxjs: 7.8.1
+      tslib: 2.8.1
+    optionalDependencies:
+      kafkajs: 2.2.4
 
   '@nestjs/platform-express@11.0.8(@nestjs/common@11.0.8(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@11.0.8)':
     dependencies:
       '@nestjs/common': 11.0.8(reflect-metadata@0.2.2)(rxjs@7.8.1)
-      '@nestjs/core': 11.0.8(@nestjs/common@11.0.8(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@11.0.8)(reflect-metadata@0.2.2)(rxjs@7.8.1)
+      '@nestjs/core': 11.0.8(@nestjs/common@11.0.8(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/microservices@11.0.11)(@nestjs/platform-express@11.0.8)(reflect-metadata@0.2.2)(rxjs@7.8.1)
       cors: 2.8.5
       express: 5.0.1
       multer: 1.4.5-lts.1
@@ -4226,12 +4298,13 @@ snapshots:
     transitivePeerDependencies:
       - chokidar
 
-  '@nestjs/testing@11.0.8(@nestjs/common@11.0.8(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@11.0.8)(@nestjs/platform-express@11.0.8)':
+  '@nestjs/testing@11.0.8(@nestjs/common@11.0.8(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@11.0.8)(@nestjs/microservices@11.0.11)(@nestjs/platform-express@11.0.8)':
     dependencies:
       '@nestjs/common': 11.0.8(reflect-metadata@0.2.2)(rxjs@7.8.1)
-      '@nestjs/core': 11.0.8(@nestjs/common@11.0.8(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@11.0.8)(reflect-metadata@0.2.2)(rxjs@7.8.1)
+      '@nestjs/core': 11.0.8(@nestjs/common@11.0.8(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/microservices@11.0.11)(@nestjs/platform-express@11.0.8)(reflect-metadata@0.2.2)(rxjs@7.8.1)
       tslib: 2.8.1
     optionalDependencies:
+      '@nestjs/microservices': 11.0.11(@nestjs/common@11.0.8(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@11.0.8)(kafkajs@2.2.4)(reflect-metadata@0.2.2)(rxjs@7.8.1)
       '@nestjs/platform-express': 11.0.8(@nestjs/common@11.0.8(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@11.0.8)
 
   '@nodelib/fs.scandir@2.1.5':
@@ -4249,6 +4322,16 @@ snapshots:
   '@nuxt/opencollective@0.4.1':
     dependencies:
       consola: 3.4.0
+
+  '@openfga/sdk@0.8.0':
+    dependencies:
+      '@opentelemetry/api': 1.9.0
+      axios: 1.7.9
+      tiny-async-pool: 2.1.0
+    transitivePeerDependencies:
+      - debug
+
+  '@opentelemetry/api@1.9.0': {}
 
   '@pkgr/core@0.1.1': {}
 
@@ -6146,6 +6229,8 @@ snapshots:
     optionalDependencies:
       graceful-fs: 4.2.11
 
+  kafkajs@2.2.4: {}
+
   keyv@4.5.4:
     dependencies:
       json-buffer: 3.0.1
@@ -6840,6 +6925,8 @@ snapshots:
       b4a: 1.6.7
 
   through@2.3.8: {}
+
+  tiny-async-pool@2.1.0: {}
 
   tmp@0.0.33:
     dependencies:

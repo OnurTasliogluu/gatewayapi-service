@@ -1,63 +1,87 @@
-import { AppService } from './app.service';
 import {
   Controller,
-  Get,
   Post,
-  Put,
-  Patch,
-  Delete,
-  Req,
-  Res,
+  Body,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
-import { Request, Response } from 'express'; // Use Express types
-import { map } from 'rxjs/operators';
+import { MessagePattern } from '@nestjs/microservices';
+import { ClientProxy } from '@nestjs/microservices';
+import { MicroserviceRequest } from './types/request.interface';
+import { ConfigService } from '@nestjs/config';
+import { lastValueFrom } from 'rxjs';
+import { ModuleRef } from '@nestjs/core';
+import { ServiceConfig } from './config/configuration';
 
-@Controller('gateway')
+@Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  private serviceClients: Map<string, ClientProxy> = new Map();
 
-  @Get('*')
-  async proxyGet(@Req() req: Request, @Res() res: Response) {
-    return this.proxyRequest('get', req, res);
+  constructor(
+    private configService: ConfigService,
+    private moduleRef: ModuleRef,
+  ) {
+    this.initializeServiceClients();
   }
 
-  @Post('*')
-  async proxyPost(@Req() req: Request, @Res() res: Response) {
-    return this.proxyRequest('post', req, res);
+  private initializeServiceClients() {
+    const services =
+      this.configService.get<ServiceConfig[]>('gateway.services') || [];
+
+    if (!Array.isArray(services)) {
+      throw new Error('Invalid services configuration');
+    }
+
+    services.forEach((service) => {
+      const token = `${service.name.toUpperCase()}_SERVICE`;
+      try {
+        const client = this.moduleRef.get<ClientProxy>(token, {
+          strict: false,
+        });
+        if (client) {
+          this.serviceClients.set(service.name, client);
+        }
+      } catch (error) {
+        console.error(
+          `Client initialization failed for ${service.name}:`,
+          error,
+        );
+      }
+    });
   }
 
-  @Put('*')
-  async proxyPut(@Req() req: Request, @Res() res: Response) {
-    return this.proxyRequest('put', req, res);
+  @Post()
+  async routeRequest(@Body() request: MicroserviceRequest) {
+    // Validate request
+    if (!request.service || !request.pattern || !request.data) {
+      throw new HttpException('Invalid request format', HttpStatus.BAD_REQUEST);
+    }
+
+    // Get client with null check
+    const client = this.serviceClients.get(request.service);
+    if (!client) {
+      throw new HttpException(
+        `Service ${request.service} not available`,
+        HttpStatus.SERVICE_UNAVAILABLE,
+      );
+    }
+
+    try {
+      return await lastValueFrom(client.send(request.pattern, request.data));
+    } catch (error) {
+      throw new HttpException(
+        error.message || 'Service request failed',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
-  @Patch('*')
-  async proxyPatch(@Req() req: Request, @Res() res: Response) {
-    return this.proxyRequest('patch', req, res);
-  }
-
-  @Delete('*')
-  async proxyDelete(@Req() req: Request, @Res() res: Response) {
-    return this.proxyRequest('delete', req, res);
-  }
-
-  private async proxyRequest(
-    method: string,
-    req: Request,
-    res: Response,
-  ): Promise<void> {
-    const url = req.originalUrl.replace('/gateway', ''); // Use Express's `originalUrl`
-    const body = method === 'get' ? undefined : req.body;
-    const headers = req.headers;
-
-    this.appService
-      .proxyRequest(method, url, body, headers)
-      .pipe(map((response) => response.data))
-      .subscribe({
-        next: (data) => res.status(200).send(data), // Use Express's `status` method
-        error: (err) => {
-          res.status(err.response?.status || 500).send(err.response?.data); // Use Express's `status` method
-        },
-      });
+  @MessagePattern({ cmd: 'health' })
+  healthCheck() {
+    return {
+      status: 'ok',
+      services: Array.from(this.serviceClients.keys()),
+      timestamp: new Date().toISOString(),
+    };
   }
 }

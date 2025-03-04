@@ -1,18 +1,31 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { HttpModule } from '@nestjs/axios';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import configuration, { ServiceConfig } from './config/configuration';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true, // Make the ConfigModule available globally
-      envFilePath: '.env', // Specify the path to your .env file
+      load: [configuration],
+      isGlobal: true,
     }),
-    HttpModule,
+    ClientsModule.registerAsync(
+      (() => {
+        const config = configuration();
+        return config.services.map((service: ServiceConfig) => ({
+          name: `${service.name.toUpperCase()}_SERVICE`,
+          useFactory: () => ({
+            transport: Transport.TCP,
+            options: {
+              host: service.host,
+              port: service.port,
+            },
+          }),
+        }));
+      })(),
+    ),
   ],
   controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}

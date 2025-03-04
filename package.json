@@ -21,16 +21,21 @@
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
-    "@nestjs/core": "^11.0.1",
-    "@nestjs/platform-express": "^11.0.1",
     "@nestjs/config": "4.0.0",
+    "@nestjs/core": "^11.0.1",
+    "@nestjs/microservices": "^11.0.9",
+    "@nestjs/platform-express": "^11.0.1",
+    "@openfga/sdk": "^0.8.0",
+    "kafkajs": "2.2.4",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.18.0",
+    "@nestjs/axios": "^4.0.0",
     "@nestjs/cli": "^11.0.0",
+    "@nestjs/microservices": "^11.0.11",
     "@nestjs/schematics": "^11.0.0",
     "@nestjs/testing": "^11.0.1",
     "@swc/cli": "^0.6.0",
@@ -39,7 +44,6 @@
     "@types/jest": "^29.5.14",
     "@types/node": "^22.10.7",
     "@types/supertest": "^6.0.2",
-    "@nestjs/axios": "^4.0.0",
     "axios": "^1.7.9",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",
@@ -72,5 +76,10 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@nestjs/core"
+    ]
   }
 }

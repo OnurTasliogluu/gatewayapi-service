@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Req, Headers } from '@nestjs/common';
+import { Controller, Post, Body, Headers } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 import { ClientProxy } from '@nestjs/microservices';
 import { MicroserviceRequest } from './types/request.interface';
@@ -6,6 +6,7 @@ import { ConfigService } from '@nestjs/config';
 import { lastValueFrom } from 'rxjs';
 import { ModuleRef } from '@nestjs/core';
 import { ServiceConfig } from './config/configuration';
+import { ResponseType } from './interfaces/responsetype.interface';
 
 @Controller()
 export class AppController {
@@ -63,12 +64,14 @@ export class AppController {
       authorization, // Include the Bearer token
     };
 
-    return await lastValueFrom(
+    const response: ResponseType = await lastValueFrom(
       client.send(request.pattern, {
         data: request.data,
         headers, // Pass headers to the downstream service
       }),
     );
+
+    return response;
   }
 
   @MessagePattern({ cmd: 'health' })

@@ -1,10 +1,4 @@
-import {
-  Controller,
-  Post,
-  Body,
-  HttpException,
-  HttpStatus,
-} from '@nestjs/common';
+import { Controller, Post, Body, Req, Headers } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 import { ClientProxy } from '@nestjs/microservices';
 import { MicroserviceRequest } from './types/request.interface';
@@ -50,30 +44,31 @@ export class AppController {
     });
   }
 
-  @Post()
-  async routeRequest(@Body() request: MicroserviceRequest) {
-    // Validate request
-    if (!request.service || !request.pattern || !request.data) {
-      throw new HttpException('Invalid request format', HttpStatus.BAD_REQUEST);
+  @Post('api')
+  async routeRequest(
+    @Body() request: MicroserviceRequest,
+    @Headers('authorization') authorization: string, // Extract Authorization header
+  ) {
+    if (!this.serviceClients.has(request.service)) {
+      throw new Error(`Service ${request.service} not available`);
     }
 
-    // Get client with null check
     const client = this.serviceClients.get(request.service);
     if (!client) {
-      throw new HttpException(
-        `Service ${request.service} not available`,
-        HttpStatus.SERVICE_UNAVAILABLE,
-      );
+      throw new Error(`Service client ${request.service} not available`);
     }
 
-    try {
-      return await lastValueFrom(client.send(request.pattern, request.data));
-    } catch (error) {
-      throw new HttpException(
-        error.message || 'Service request failed',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    // Forward the Bearer token to the downstream service
+    const headers = {
+      authorization, // Include the Bearer token
+    };
+
+    return await lastValueFrom(
+      client.send(request.pattern, {
+        data: request.data,
+        headers, // Pass headers to the downstream service
+      }),
+    );
   }
 
   @MessagePattern({ cmd: 'health' })

@@ -17,9 +17,10 @@ services:
       - /app/node_modules  # Ensure node_modules is not overwritten
     environment:
       ELASTICSEARCH_HOST: elasticsearch:9200
-    networks:
-      - app-network
     command: pnpm start:dev
+    networks:
+      app-network:
+        ipv4_address: 10.20.0.5  # Assign a static IP to the app service (optional)
 
   # Elasticsearch
   elasticsearch:
@@ -31,10 +32,11 @@ services:
       - xpack.security.enabled=false
     ports:
       - "9200:9200"
-    networks:
-      - app-network
     logging:
       driver: none
+    networks:
+      app-network:
+        ipv4_address: 10.20.0.6  # Assign a static IP to the app service (optional)
 
   kafka:
     image: docker.io/bitnami/kafka:3.9
@@ -53,15 +55,16 @@ services:
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
-    networks:
-      - app-network
     logging:
       driver: none
+    networks:
+      app-network:
+        ipv4_address: 10.20.0.7  # Assign a static IP to the app service (optional)
 
-# Define a custom network for all services
 networks:
   app-network:
-    driver: bridge
+    external: true
+    name: authentication-service_app-network
 
 volumes:
   kafka_data:

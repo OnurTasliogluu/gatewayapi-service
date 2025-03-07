@@ -2,8 +2,8 @@ version: '3.8'
 
 services:
   # NestJS Application
-  nestjs-app:
-    container_name: nestjs-app
+  gatewayapi-app:
+    container_name: gatewayapi-app
     build:
       context: . # Path to your NestJS project Dockerfile
       target: development  # Use the development stage for local development
